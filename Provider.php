@@ -3,6 +3,7 @@
 namespace SocialiteProviders\Keycloak;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
 
@@ -41,7 +42,7 @@ class Provider extends AbstractProvider
 
     public static function additionalConfigKeys()
     {
-        return ['base_url', 'realms'];
+        return ['base_url', 'realms', 'app_name'];
     }
 
     /**
@@ -102,6 +103,7 @@ class Provider extends AbstractProvider
     {
         return array_merge(parent::getTokenFields($code), [
             'grant_type' => 'authorization_code',
+            'client_session_state' => $this->getConfig('app_name') ? $this->getConfig('app_name') . '_' . Str::random(20) : Str::random(30)
         ]);
     }
 }
